@@ -20,7 +20,7 @@ from model.multimodal_ar import MultimodalFcClassifier
 from sklearn.metrics import confusion_matrix
 
 """
-evaluate an mm-fit model written by David Stromback, modified by Mattias Cross for fault tolerance
+evaluate an mm-fit model written by David Stromback, modified by Mattias Cross for fault-tolerance. Such lines have "-MC" commented
 """
 ################
 # Instantiate model
@@ -44,13 +44,14 @@ MODALITIES = ['sw_l_acc', 'sw_l_gyr', 'sw_l_hr', 'sw_r_acc', 'sw_r_gyr', 'sw_r_h
 # We use a subset of all modalities in this demo.
 MODALITIES_SUBSET = ['sw_l_acc', 'sw_l_gyr', 'sw_r_acc', 'sw_r_gyr', 'sp_r_acc', 'sp_r_gyr', 'eb_l_acc', 'eb_l_gyr',
                      'pose_3d']
+
 #currently manually shuting off modalities (credit to David)
 ZERO_OUT_MODALITIES = args.zero_out_modalities
 
-NOISY_MODALITIES = args.noisy_modalities #modalities to corrupt
+NOISY_MODALITIES = args.noisy_modalities #modalities to corrupt - MC
 NOISY_FILES = []
 
-IMMUNE_SYSTEM = nsa.generateNI() #CREATE SET OF IMMUNE SYSTEMS
+IMMUNE_SYSTEM = nsa.generateNI() #CREATE SET OF IMMUNE SYSTEMS - MC
 
 exp_name = args.name
 output_path = args.output
@@ -103,6 +104,7 @@ for w_id in TRAIN_W_IDs + VAL_W_IDs + TEST_W_IDs:
             elif modality_type in file:
                 data = np.load(os.path.join(workout_path, file))
   
+                #-MC
                 if modality_type in NOISY_MODALITIES:
                     #add noise to file
                     data[:, (2, 3, 4)] += np.random.normal(scale = args.noise_scale, size = data[:, (2, 3, 4)].shape)
@@ -152,7 +154,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch
 ################
 
 # Test best model
-model = torch.load("output/test experiment 5 gpu_e0_best_MODEL.pth") #load model
+model = torch.load("output/test experiment 5 gpu_e0_best_MODEL.pth") #load model, the one trained by MC was named: "output/test experiment 5 gpu_e0_best_MODEL.pth"
 model.eval()
 
 #build confusion matrix https://christianbernecker.medium.com/how-to-create-a-confusion-matrix-in-pytorch-38d06a7f04b7
